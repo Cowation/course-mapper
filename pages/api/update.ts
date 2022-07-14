@@ -6,8 +6,8 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<string>
 ) {
-  const { course_no, prereq } = req.body;
-  if (course_no === undefined || prereq === undefined)
+  const { course_no, prereq, editor } = req.body;
+  if (course_no === undefined || prereq === undefined || editor === undefined)
     return res.status(400).send("Bad request");
 
   const course = await db.collection("courses").doc(course_no).get();
@@ -21,6 +21,7 @@ export default async function handler(
       ...course.data(),
       fixed: true,
       pre: prereq,
+      editor,
     });
 
   res.status(200).send("Updated course! Thank you.");

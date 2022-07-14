@@ -8,6 +8,7 @@ import { useRef } from "react";
 const Home: NextPage = () => {
   const queryClient = useQueryClient();
 
+  const nameInputRef = useRef<HTMLInputElement>(null);
   const prereqInputRef = useRef<HTMLInputElement>(null);
   const courseQuery = useQuery(
     "course",
@@ -22,7 +23,15 @@ const Home: NextPage = () => {
   );
 
   const courseMutation = useMutation(
-    async ({ course_no, prereq }: { course_no: string; prereq: string }) => {
+    async ({
+      course_no,
+      prereq,
+      editor,
+    }: {
+      course_no: string;
+      prereq: string;
+      editor: string;
+    }) => {
       console.log(course_no, prereq);
       await fetch(`${host}/api/update`, {
         method: "POST",
@@ -32,6 +41,7 @@ const Home: NextPage = () => {
         body: JSON.stringify({
           course_no,
           prereq,
+          editor,
         }),
       });
     },
@@ -77,18 +87,29 @@ const Home: NextPage = () => {
         <input
           type="text"
           className="mb-2 h-10 w-80 rounded-md bg-neutral-200 text-center"
-          placeholder="Type here"
+          placeholder="Your name (so we can give you credit)"
+          ref={prereqInputRef}
+        />
+        <input
+          type="text"
+          className="mb-2 h-10 w-80 rounded-md bg-neutral-200 text-center"
+          placeholder="Type condition string here"
           ref={prereqInputRef}
         />
         <button
           className="rounded-md bg-red-800 px-6 py-1 text-white"
           onClick={() => {
-            if (courseQuery.status !== "success" || !prereqInputRef.current)
+            if (
+              courseQuery.status !== "success" ||
+              !prereqInputRef.current ||
+              !nameInputRef.current
+            )
               return;
 
             courseMutation.mutate({
               course_no: courseQuery.data.course_no,
               prereq: prereqInputRef.current.value,
+              editor: nameInputRef.current.value,
             });
 
             prereqInputRef.current.value = "";
