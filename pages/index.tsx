@@ -88,7 +88,7 @@ const Home: NextPage = () => {
           type="text"
           className="mb-2 h-10 w-80 rounded-md bg-neutral-200 text-center"
           placeholder="Your name (so we can give you credit)"
-          ref={prereqInputRef}
+          ref={nameInputRef}
         />
         <input
           type="text"
