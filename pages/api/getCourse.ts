@@ -7,14 +7,11 @@ export default async function handler(
   res: NextApiResponse<unknown>
 ) {
   try {
-    const courses = await db
-      .collection("courses")
-      .where("fixed", "==", false)
-      .get();
+    const course = (
+      await db.collection("courses").where("fixed", "==", false).limit(1).get()
+    ).docs[0].data();
 
-    return res.send(
-      courses.docs[Math.floor(Math.random() * courses.docs.length)].data()
-    );
+    return res.send(course);
   } catch (error) {
     return res.status(500).send(error);
   }
