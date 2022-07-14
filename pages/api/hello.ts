@@ -1,13 +1,23 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { NextApiRequest, NextApiResponse } from 'next'
+import type { NextApiRequest, NextApiResponse } from "next";
+import db from "../../utils/db";
+import courses from "../../courses.json";
 
 type Data = {
-  name: string
-}
+  name: string;
+};
 
 export default function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse<string>
 ) {
-  res.status(200).json({ name: 'John Doe' })
+  return res.send("Ah ah ah!");
+
+  for (const course of courses) {
+    console.log("Setting course", course.course_no);
+    db.collection("courses")
+      .doc(course.course_no)
+      .set({ ...course, fixed: false });
+  }
+  res.send("Done");
 }
