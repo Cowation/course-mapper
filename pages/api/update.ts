@@ -20,6 +20,7 @@ export default async function handler(
     .set({
       ...course.data(),
       fixed: true,
+      pre: prereq,
     });
 
   res.status(200).send("Updated course! Thank you.");
